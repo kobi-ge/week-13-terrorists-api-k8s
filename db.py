@@ -3,7 +3,26 @@ from fastapi import FastAPI, APIRouter, UploadFile, Query, Form
 import shutil
 import multipart
 import models
+from pymongo import MongoClient
 
+class Connection:
+    def __init__(self):
+        self.coll =None
+
+    def connect(self):
+        try:    
+            uri = "mongodb://localhost:27017/"
+            client = MongoClient(uri)
+            client.connect()
+
+
+        except Exception as e:
+            raise Exception(
+        "The following error occurred: ", e)
+
+
+
+# client.close()
 
 def upload_file(file: UploadFile):
         if not file.filename.lower().endswith(('.csv')):
@@ -25,30 +44,21 @@ def upload_file(file: UploadFile):
             return 401, "File is not proper"
 
 
-def extract_top_5():
-    df = pd.read_csv('terrorists_data.csv')
+def extract_top_5(df):
     top = df.sort_values(by=['danger_rate'], ascending= False)
     top_5 = top.head()
-    return top_5.to_dict()
+    data = top_5.to_dict(orient= "tight", index=False)
+    return data['data']
 
 
-# b = {"d": top_5}
-# c = {"name": top_5['name'], "location": b['d']['location'], "danger_rate": b['d']['danger_rate']}
-# print(c)
-# d = {"name": top_5["name"]}
-# #print(type(d))
-#print(b['d']['name'])
-
-def validating(top_5):
+def to_final_dict(data):
     external_dict = {"conut": 5, "top": []}
-    for column in top_5:
-        if column in ['name', 'location', 'danger_rate']:
-            for name 
+    internal_dict = {}
+    for terrorist in data:
+        internal_dict['name'] = terrorist[0]
+        internal_dict['danger_rate'] = terrorist[1]
+        internal_dict['location'] = terrorist[2]
+        external_dict['top'].append(internal_dict)
+    return external_dict
 
 
-
-
-a = extract_top_5()
-b = validating(a)
-
-# print(extract_top_5())

@@ -22,4 +22,4 @@ def post_terrorists(file: UploadFile):
 app.include_router(router)
 
 if __name__ == "__main__":
-    uvicorn.run(app="main:main", host="127.0.0.1", port=8000)
+    uvicorn.run(app="main:app", host="127.0.0.1", port=8000)
