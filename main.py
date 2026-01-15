@@ -13,7 +13,8 @@ router = APIRouter()
 def post_terrorists(file: UploadFile):
     df = db.UploadFile(file)
     top_5 = db.extract_top_5(df)
-    return df
+    dict_format = db.to_final_dict(top_5)
+    return dict_format
 
 
 
